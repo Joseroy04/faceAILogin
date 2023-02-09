@@ -1,0 +1,37 @@
+Here's an example template for a basic webcam website that allows users to access their webcam and take photos:
+
+HTML:
+
+php
+
+<html>
+  <head>
+    <title>Webcam Website</title>
+  </head>
+  <body>
+    <video id="webcam"></video>
+    <button id="snap">Snap Photo</button>
+    <canvas id="photo"></canvas>
+    <img id="photo-img" src="" alt="photo">
+  </body>
+  <script>
+    const video = document.getElementById("webcam");
+    const canvas = document.getElementById("photo");
+    const snap = document.getElementById("snap");
+    const photo = document.getElementById("photo-img");
+
+    navigator.mediaDevices.getUserMedia({ video: true, audio: false })
+      .then((stream) => {
+        video.srcObject = stream;
+        video.play();
+      })
+      .catch((error) => {
+        console.error("Error accessing webcam:", error);
+      });
+
+    snap.addEventListener("click", () => {
+      canvas.getContext("2d").drawImage(video, 0, 0, canvas.width, canvas.height);
+      photo.src = canvas.toDataURL("image/png");
+    });
+  </script>
+</html>
