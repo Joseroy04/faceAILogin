@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <style>
+      * {
+        padding: 5px;
+        margin: 5px;
+      }
+      body {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 20px;
+      }
+
+      video,
+      canvas,
+      img {
+        width: 60%;
+        border: 1px solid black;
+      }
+
+      #status {
+        margin-top: 20px;
+        font-size: 20px;
+      }
+
+      @media (max-width: 767px) {
+        video,
+        canvas,
+        img {
+          width: 80%;
+        }
+      }
+    </style>
+  </head>
+
+  <body>
+    <video id="video" autoplay></video>
+    <canvas id="canvas" hidden></canvas>
+    <h1>
+      <div id="timing">wait : 3 seconds</div>
+    </h1>
+    <button id="capture-button">Capture</button>
+    <button id="send-button" hidden>Send</button>
+    <button id="recapture-button" hidden>Capture again</button>
+    <div id="status"></div>
+    <img id="image" hidden />
+    <script>
+      const video = document.querySelector("#video");
+      const canvas = document.querySelector("#canvas");
+      const image = document.querySelector("#image");
+      const captureButton = document.querySelector("#capture-button");
+      const sendButton = document.querySelector("#send-button");
+      const recaptureButton = document.querySelector("#recapture-button");
+      const status = document.querySelector("#status");
+      const timing = document.querySelector("#timing");
+
+      let captureTime;
+
+      async function setupWebcam() {
+        const constraints = {
+          video: {
+            width: 640,
+            height: 480
+          }
+        };
+        const stream = await navigator.mediaDevices.getUserMedia(constraints);
+        video.srcObject = stream;
+        return new Promise((resolve) => {
+          video.onloadedmetadata = () => {
+            resolve();
+          };
+        });
+      }
+      async function timer() {
+        count = 2;
+        while (count > 0) {
+          timing.innerHTML = `wait : ${count}`;
+          await new Promise((resolve) => setTimeout(resolve, 1000));
+          count--;
+        }
+      }
+
+      async function takePhoto() {
+        captureTime = new Date();
+        timer();
+        await new Promise((resolve) => setTimeout(resolve, 3000));
+        canvas.width = video.videoWidth;
+        canvas.height = video.videoHeight;
+        canvas.getContext("2d").drawImage(video, 0, 0);
+        // captureButton.setAttribute("hidden", true);
+        sendButton.removeAttribute("hidden");
+        captureButton.innerHTML = "capture again";
+        timing.innerHTML = `wait : 3 seconds`;
+
+        // recaptureButton.removeAttribute("hidden");
+        image.setAttribute("src", canvas.toDataURL());
+        image.removeAttribute("hidden");
+        status.innerHTML = `Photo captured after 5 seconds at: ${new Date().toLocaleString()}`;
+      }
+
+      async function sendPhoto() {
+        const blob = await new Promise((resolve) => {
+          canvas.toBlob(resolve);
+        });
+        const response = await fetch("https://httpbin.org/image/jpeg", {
+          method: "POST",
+          body: blob
+        });
+        if (response.ok) {
+          alert("The photo was sent successfully");
+        } else {
+          alert("An error occurred while sending the photo");
+        }
+      }
+
+      function recapturePhoto() {
+        image.setAttribute("hidden", true);
+        sendButton.setAttribute("hidden", true);
+        recaptureButton.setAttribute("hidden", true);
+        captureButton.removeAttribute("hidden");
+        const elapsedTime = (new Date() - captureTime) / 1000;
+        status.innerHTML = `Capture Again button clicked after ${elapsedTime} seconds at: ${new Date().toLocaleString()}`;
+      }
+
+      async function main() {
+        await setupWebcam();
+        video.play();
+        captureButton.addEventListener("click", takePhoto);
+        sendButton.addEventListener("click", sendPhoto);
+        recaptureButton.addEventListener("click", recapturePhoto);
+      }
+
+      main();
+    </script>
+  </body>
+</html>
