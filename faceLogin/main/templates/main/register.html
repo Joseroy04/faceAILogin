@@ -1,0 +1,130 @@
+{% extends "main/header.html" %}
+
+{% block content %} 
+
+{% load crispy_forms_tags %}         
+
+<!--Register--> 
+<div class="container py-5">
+	<h1>Register</h1>
+	<form method="POST">
+		{% csrf_token %}
+		{{ register_form|crispy }}
+		<div id="alerttext" hidden></div>                    
+		<button class="btn btn-primary" type="submit" id="register" disabled>Register</button>
+	</form>
+	
+</div>
+<!-- <script>
+	const passwordInput = document.getElementById("id_password1");
+	const alerttext =document.getElementById("alerttext");
+	passwordInput.addEventListener("blur",function(){
+		const password = passwordInput.value;
+		if (password.length >7 ){
+			console.log("Password is goood 8");
+			alerttext.setAttribute('hidden',true);
+			alerttext.innerHTML = ``
+
+
+	  } else {
+		console.log("password less 8");
+		alerttext.removeAttribute('hidden');
+		alerttext.innerHTML = `<p style=\"border-width:3px; border-style:solid; border-color:#FF0000; padding: 1em;\">Password lesss 8</p>`
+		
+		//passwordInput.focus()
+
+	  }
+	});
+</script> -->
+<!-- 
+<script>
+	function validatePassword() {
+	  const password = document.getElementById("id_password1").value;
+	  const confirmPassword = document.getElementById("id_password2").value;
+	  //const personalInfo = document.getElementById("personalInfo").value;
+	  //const errorMessage = document.getElementById("errorMessage");
+
+	  const passwordRequirements = (password, confirmPassword) => {
+		if (password.length < 8) {
+		  return "Password must be at least 8 characters long.";
+		}
+		/*
+		if (password.match(/^[0-9]+$/)) {
+		  return "Password can't be entirely numeric.";
+		}
+		if (password === personalInfo || password.includes(personalInfo)) {
+		  return "Password can't be too similar to your personal information.";
+		}
+		const commonPasswords = ["password", "123456", "qwerty", "admin"];
+		if (commonPasswords.includes(password)) {
+		  return "Password can't be a commonly used password.";
+		}
+		*/
+		if (password !== confirmPassword) {
+		  return "Password and Confirm Password must match.";
+		}
+		return "Password is valid.";
+	  };
+
+	  const error = passwordRequirements(password, confirmPassword);
+	  if (error) {
+		alert(error)
+		errorMessage.innerHTML = error;
+	  } else {
+		//errorMessage.innerHTML = "";
+		alert("Password is valid and confirmed.");
+	  }
+	}
+
+	
+  </> -->
+<!-- 
+  <script>
+	const passwordInput = document.getElementById("id_password1");
+	const confirmPasswordInput = document.getElementById("id_password2");
+	const alerttext =document.getElementById("alerttext") 
+	const register =document.getElementById("register") 
+	
+	passwordInput.addEventListener("blur",function(){
+		const password = passwordInput.value;
+		if (password.length >7 ){
+			console.log("Password is goood 8");
+			alerttext.setAttribute('hidden',true);
+			alerttext.innerHTML = ``
+
+
+	  } else {
+		console.log("password less 8");
+		alerttext.removeAttribute('hidden');
+		alerttext.innerHTML = `<p style=\"border-width:3px; border-style:solid; border-color:#FF0000; padding: 1em;\">Password lesss 8</p>`
+		
+		//passwordInput.focus()
+
+	  }
+	});
+	confirmPasswordInput.addEventListener("blur", function() {
+	  const password = passwordInput.value;
+	  const confirmPassword = confirmPasswordInput.value;
+	  
+	  if (password === confirmPassword) {
+		console.log("Password and confirm password are the same");
+		alerttext.setAttribute('hidden',true);
+		alerttext.innerHTML += ``
+
+		register.removeAttribute('disabled')
+
+	  } else {
+		console.log("Password and confirm password are not the same");
+		alerttext.removeAttribute('hidden');
+		alerttext.innerHTML += `<p style=\"border-width:3px; border-style:solid; border-color:#FF0000; padding: 1em;\">Password and confirm password are not the same</p>`
+
+		register.setAttribute('disabled',true)
+
+
+		//alert("Password and confirm password are not the same");
+		//confirmPasswordInput.focus()
+
+	  }
+	});
+	</script> -->
+{% endblock %}
