@@ -7,5 +7,5 @@ app_name = "main"
 urlpatterns = [
     # path("", views.homepage, name="homepage"),
     path("", views.signup, name="register"),
-    path('/signupaction',views.signupaction, name="signupaction")
+    path('/signupaction',views.signupaction, name="sa")
 ]
