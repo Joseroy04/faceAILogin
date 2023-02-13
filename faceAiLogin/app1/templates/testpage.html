@@ -22,9 +22,11 @@
 
 	<h1>Quiz Exam Page</h1>
 
-	<form action="#" method="post">
+  <img src="http://127.0.0.1:8000/media/{{src}}" alt="img" width="100px" > hi,{{name}}
+	<form action={% url 'home' %} method="post">
+    {% csrf_token %} 
 		<!-- Question 1 -->
-        hi,{{name}}
+
 		<p><strong>Question 1:</strong> What is the capital of France?</p>
 		<input type="radio" name="question1" value="Paris"> Paris<br>
 		<input type="radio" name="question1" value="London"> London<br>

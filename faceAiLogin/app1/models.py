@@ -1,7 +1,9 @@
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
 from django.db import models
 import numpy as np
-# class UserManager(BaseUserManager):
+from PIL import Image as Im
+import face_recognition
+#class UserManager(BaseUserManager):
 #     def create_user(self, student_id, email, password=None):
 #         """
 #         Creates and saves a User with the given student ID, email, and password.
@@ -56,6 +58,16 @@ class students(models.Model):
 
     def __str__(self):
         return self.name+ " "+self.student_id
+    
+    def save(self, *args, **kwargs):
+       if self.encoding is not None:
+           pass
+       else:
+           img = Im.open(self.photo).convert('RGB')
+           np_image = np.array(img)
+           val = face_recognition.face_encodings(np_image)[0]
+           self.encoding = np.array(val).tobytes()
+       super().save(*args, **kwargs) # Call the real save() method
         # return self.student_id  
     # def has_perm(self, perm, obj=None):
     #     "Does the user have a specific permission?"

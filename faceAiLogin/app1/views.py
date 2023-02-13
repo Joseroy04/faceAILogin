@@ -6,6 +6,8 @@ import face_recognition
 from .face_rec import f,recognize_face
 from .forms import SignupForm,LoginForm
 from .jpgconver import convert_to_jpeg,convert_base64_to_image
+from django.conf import settings
+from django.core.mail import send_mail
 
 def signup(request):
     if request.method == 'POST':
@@ -44,12 +46,20 @@ def login (request ):
             student_id = request.POST['student_id']
             password = request.POST['password']
             print(student_id,password)
-            
-            name = list(students.objects.filter(student_id=student_id,password=password).values('name'))
+            name = list(students.objects.filter(student_id=student_id,password=password).values('name','photo'))
             try:
                 print(name[0]['name'])
                 # login(request, studentsobj)
-                return render(request,'testpage.html',{'name':name[0]['name']})
+                subject = 'welcome to GFG world'
+                message = f'Hi , thank you for registering in geeksforgeeks.'
+                email_from = settings.EMAIL_HOST_USER
+                recipient_list = ['joseph04072001@gmail.com', ]
+                try:
+                    send_mail( subject, message, email_from, recipient_list )
+                except:
+                    pass
+
+                return render(request,'testpage.html',{'name':name[0]['name'],'src':name[0]['photo']})
             except:
                 return render(request,"login.html",{'form':emptyform,'erorr':' try again password or id is wrong. or try face_recognition to login'}) 
     return render(request,"login.html",{'form':emptyform})
@@ -62,10 +72,11 @@ def login_face_recog(request):
                 encode_data = convert_base64_to_image(input_data)
                 result = recognize_face(encode_data)
                 if result is not None:
-                    name = list(students.objects.filter(student_id=int(result)).values('name'))
+                    name = list(students.objects.filter(student_id=int(result)).values('name','photo'))
                     if name is not None:
                         print(name[0]['name'])
-                        return render(request,'testpage.html',{'name':name[0]['name']})
+                        print(name[0]['photo'])
+                        return render(request,'testpage.html',{'name':name[0]['name'],'src':name[0]['photo']})
                     else:
                         return render(request,'facelogin.html',{'erorr':'face not reconied try again'})
                         
