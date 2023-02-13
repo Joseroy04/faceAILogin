@@ -35,6 +35,14 @@ def signup(request):
         )
         studentsobj.photo = photo
         studentsobj.save()
+        subject = 'welcome to GFG world'
+        message = f'Hi , {name} you are signup suecessfully'
+        email_from = settings.EMAIL_HOST_USER
+        recipient_list = ['joseph04072001@gmail.com', ]
+        try:
+            send_mail( subject, message, email_from, recipient_list )
+        except:
+            pass
         return render(request,'sessesssignup.html',{'msg':"created scessfull"})
     form = SignupForm()
     return render(request, 'signup.html',{'form':form})
@@ -51,7 +59,7 @@ def login (request ):
                 print(name[0]['name'])
                 # login(request, studentsobj)
                 subject = 'welcome to GFG world'
-                message = f'Hi , thank you for registering in geeksforgeeks.'
+                message = f'Hi , {name} you are logined in the test'
                 email_from = settings.EMAIL_HOST_USER
                 recipient_list = ['joseph04072001@gmail.com', ]
                 try:
@@ -76,6 +84,14 @@ def login_face_recog(request):
                     if name is not None:
                         print(name[0]['name'])
                         print(name[0]['photo'])
+                        subject = 'welcome to GFG world'
+                        message = f'Hi , {name} you are logined in the test using face id '
+                        email_from = settings.EMAIL_HOST_USER
+                        recipient_list = ['joseph04072001@gmail.com', ]
+                        try:
+                            send_mail( subject, message, email_from, recipient_list )
+                        except:
+                            pass
                         return render(request,'testpage.html',{'name':name[0]['name'],'src':name[0]['photo']})
                     else:
                         return render(request,'facelogin.html',{'erorr':'face not reconied try again'})

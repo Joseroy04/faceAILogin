@@ -134,4 +134,4 @@ EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_USE_TLS = True
 EMAIL_PORT = 587
 EMAIL_HOST_USER = 'joroy2019@gmail.com'
-EMAIL_HOST_PASSWORD = '97909790j'
+EMAIL_HOST_PASSWORD = 'mcmzynogrlyaqvhi'
